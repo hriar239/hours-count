@@ -1,48 +1,48 @@
-'''
-Structure:
-- while True loop.
-- asks for nickname or name you do not mind typing repeatedly
-- asks for amount of volunteering hours.
-- if name is not in the dict, prompts full name of volunteer.
-    - makes the nickname the key, [number of hours, full name] as list
-- if it is in the dict, just adds the amount of hours.
-- when prompted nickname of volunteer, typing in "save" allows you to save
-    the recorded names and hours like this:
-        Full Name: x hour(s)
-    - lets be honest if you nicknamed a friend "save" then you should probably
-        know better
-- name the save file.
-- breaks the while true loop.
-'''
 d = {}      # 'volunteer':[hours, 'fullname']
-print('''This program allows the user to input the name
-of a volunteer and the amount of hours they put
-in for a certain recurring event (which will be
-saved as a file in the place where this file is.)''')
+print('''first input:
+a1 is alwaysOne, it will ensure each volunteer
+gets or gets 1 hour added each time.
+save will save the file.''')
+
 while True:
+    alwaysOne = 1
     n = input('Enter name of volunteer (firstname/nickname): ')
+    if n == 'a1':
+        alwaysOne = 0
+        continue
     n = n.lower()
     if n == 'save':
         x = input(
-            'Name of file to save (.txt is automatically added): ') # Eg. Board meeting, x workshop
+            'Name of file to save (.txt is automatically added): '
+            ) # Eg. Board meeting, x workshop
         x += '.txt'
         f = open(x, 'w')
-        for k in d:
-            s = str(d[k][0])
-            f.write(d[k][1] + ': ' + s + ' hour')
-            if int(d[k][0]) > 1:
+        for v in d.values():
+            fullName = v[0]
+            tHours = str(v[1])
+            eMail = v[2]
+            f.write(fullName + ': ' + tHours + ' hour')
+            if float(v[1]) > 1.0:
                 f.write('s')
-            f.write('\n')
+            f.write(', Email: ' + eMail)
+            f.write('.\n')
         f.close()
-        print(d)
         break
-    h = input('Enter number of hours: ')
+    if alwaysOne == 0:
+        h = input('Enter number of hours: ')
+    elif alwaysOne == 1:
+        h = 1
     if n not in d.keys():
         fulln = ''
         fulln = input('full name of volunteer: ')
-        d[n] = [int(h), fulln]
+        fulln = fulln.title()
+        email = input('Email? ')
+        if email == 'n':
+            email = 'none/not specified'
+        d[n] = [fulln, float(h), email]
     else:
-        d[n] = d[n][0] + int(h)
+        oldh = float(d[n][0])
+        d[n] = oldh + float(h)
 
 '''
 Things preferable to add:
